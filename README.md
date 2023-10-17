@@ -4,7 +4,7 @@
 
 # 关于我
 
-![头像](https://imgse.com/i/piCoS7n)
+[![piCoS7n.png](https://z1.ax1x.com/2023/10/17/piCoS7n.png)](https://imgse.com/i/piCoS7n)
 
 ## 个人简介
 
@@ -27,6 +27,7 @@
 - **编程语言**：Python, JavaScript, C++
 - **工具**：Git, Docker, Webpack
 - **框架**：React, Vue.js, Flask
+- **技术栈**：YOLO，Matlab，Nvidia TensorRT, Jetson系列开发平台
 
 ## 联系我
 
