@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- 通用头部模板-->>
     <title>KangKK's blog & Portfolio </title>
     <link href="../css/style.css" rel='stylesheet' type='text/css' />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,34 +10,38 @@
     <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|Oswald:400,300,700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,700,800' rel='stylesheet' type='text/css'>
     <!--//webfonts-->
+    
     <script src="js/jquery.min.js"></script>
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog 1</title>
-    <!-- 加载marked库 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>联系</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #blogList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #blogList li {
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+        #blogList li:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body>
-
-    <div id="blog-content"></div>
-    
-    <script>
-        // 使用fetch读取同级文件夹下的Markdown文件
-        fetch('./blog7.md')
-            .then(response => response.text())
-            .then(markdownText => {
-                // 使用marked转换Markdown为HTML
-                const htmlContent = marked(markdownText);
-                
-                // 插入转换后的HTML到页面中
-                document.getElementById('blog-content').innerHTML = htmlContent;
-            })
-            .catch(error => {
-                console.error("There was an error reading the Markdown file:", error);
-            });
-    </script>
-    
-    </body>
-</html>
