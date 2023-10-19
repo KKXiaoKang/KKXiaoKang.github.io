@@ -1,47 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Blog Title</title>
+    <!-- 引入jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 引入marked库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <!-- 通用头部模板-->>
     <title>KangKK's blog & Portfolio </title>
     <link href="../css/style.css" rel='stylesheet' type='text/css' />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 加载marked库 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
     <meta name="keywords" content="User Ui Kit Flat Responsive Web Site Templates, Iphone Widget Template, Smartphone login forms,Login form, Widget Template, Responsive Templates, a Ipad 404 Templates, Flat Responsive Templates" />
     <!--webfonts-->
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|Oswald:400,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,700,800' rel='stylesheet' type='text/css'>
-    <!--//webfonts-->
-    <script src="js/jquery.min.js"></script>
-
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog 1</title>
-
+    
+    <style>
+        /* Add your styles here */
+    </style>
 </head>
 <body>
 
-    <div id="blog-content" style="display: flexbox;">
+<div id="blog-content"></div>
 
-    </div>
-    
-    <script>
-        // 使用fetch读取同级文件夹下的Markdown文件
-        fetch('./blog7.md')
-            .then(response => response.text())
-            .then(markdownText => {
-                // 使用marked转换Markdown为HTML
-                const htmlContent = marked(markdownText);
-                
-                // 插入转换后的HTML到页面中
-                document.getElementById('blog-content').innerHTML = htmlContent;
-            })
-            .catch(error => {
-                console.error("There was an error reading the Markdown file:", error);
-            });
-    </script>
-    
-    </body>
+<script>
+    // 使用jQuery的Ajax功能加载同级目录下的Markdown文件
+    $.get('./blog7.md', function(markdownText) {
+        const htmlContent = marked(markdownText);
+        $('#blog-content').html(htmlContent);
+    }).fail(function() {
+        alert('Error: Unable to fetch the Markdown file.');
+    });
+</script>
+
+</body>
 </html>
