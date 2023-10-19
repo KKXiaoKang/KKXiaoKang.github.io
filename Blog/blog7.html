@@ -283,4 +283,136 @@ ros2 action send_goal /turtle/rotate_absolute turtlesim/action/RotateAbsolute &q
 
 ros2 action send_goal /turtle/rotate_absolute turtlesim/action/RotateAbsolute &quot;{theta: 0}&quot; --feedback # 通过使用feedback将每一个时刻内小乌龟的弧度进行命令行打印
 </code></pre>
-</body></html>
+<h1 class="code-line" data-line-start="283" data-line-end="284"><a id="ROS2_launch_283"></a>ROS2 节点管理之launch文件</h1>
+<h2 class="code-line" data-line-start="285" data-line-end="286"><a id="11__285"></a>1.1 需要启动的节点太多</h2>
+<h2 class="code-line" data-line-start="286" data-line-end="287"><a id="12__286"></a>1.2 节点之间有依赖关系管理</h2>
+<h2 class="code-line" data-line-start="288" data-line-end="289"><a id="ROS2launch_288"></a>ROS2编写launch的三种方法</h2>
+<ul>
+<li class="has-line-data" data-line-start="289" data-line-end="290">1、python</li>
+<li class="has-line-data" data-line-start="290" data-line-end="291">2、xml</li>
+<li class="has-line-data" data-line-start="291" data-line-end="293">3、yaml</li>
+</ul>
+<h2 class="code-line" data-line-start="293" data-line-end="294"><a id="village_li__village_wang_launchlaunch_293"></a>因为village_li 和 village_wang 的两个功能包的编译类型不同，所以编写launch的时候需要添加不同的指令进行launch管理</h2>
+<hr>
+<hr>
+<h2 class="code-line" data-line-start="297" data-line-end="298"><a id="Pythonlaunch_village_li_297"></a>Python功能包的launch添加 举例：village_li功能包</h2>
+<h3 class="code-line" data-line-start="298" data-line-end="299"><a id="1_launch_villagelaunchpy__298"></a>1、在功能包下添加 launch文件夹 <a href="http://xn--village-nw3krss06a91dxqvvy6d.launch.py">之后添加如下village.launch.py</a> 的文件</h3>
+<pre><code class="has-line-data" data-line-start="300" data-line-end="330" class="language-python"><span class="hljs-comment"># 导入库</span>
+<span class="hljs-comment"># 1.导入头文件</span>
+<span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node
+
+<span class="hljs-comment"># 2、定义</span>
+<span class="hljs-comment"># 定义函数名称为：generate_launch_description</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate_launch_description</span><span class="hljs-params">()</span>:</span>
+    
+    <span class="hljs-comment"># 3、创建节点描述</span>
+    <span class="hljs-comment"># 创建Actions.Node对象li_node，标明李四所在位置</span>
+    li4_node = Node(
+        package=<span class="hljs-string">"village_li"</span>,
+        executable=<span class="hljs-string">"li4_node"</span>
+    )
+
+    <span class="hljs-comment"># 创建Actions.Node对象wang2_node,标明王二所在位置</span>
+    wang2_node = Node(
+        package=<span class="hljs-string">"village_wang"</span>,
+        executable=<span class="hljs-string">"wang2_node"</span>
+    )
+
+    <span class="hljs-comment"># 4、搭建描述launch</span>
+    <span class="hljs-comment"># 创建LaunchDescription对象launch_description,用于描述launch文件</span>
+    launch_description = LaunchDescription([li4_node, wang2_node])
+
+    <span class="hljs-comment"># 返回让ROS2根据launch描述执行节点</span>
+    <span class="hljs-keyword">return</span> launch_description
+    <span class="hljs-keyword">pass</span>
+</code></pre>
+<h3 class="code-line" data-line-start="330" data-line-end="331"><a id="2setuppy__330"></a>2、<a href="http://xn--setup-bi1hv6itt8c77c26g.py">接下来修改setup.py</a> 添加文件读取复制</h3>
+<pre><code class="has-line-data" data-line-start="333" data-line-end="367" class="language-python"><span class="hljs-keyword">from</span> setuptools <span class="hljs-keyword">import</span> setup
+
+<span class="hljs-comment"># launch文件添加</span>
+<span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> glob
+<span class="hljs-keyword">import</span> os
+
+package_name = <span class="hljs-string">'village_li'</span>
+
+setup(
+    name=package_name,
+    version=<span class="hljs-string">'0.0.0'</span>,
+    packages=[package_name],
+    data_files=[
+        (<span class="hljs-string">'share/ament_index/resource_index/packages'</span>,
+            [<span class="hljs-string">'resource/'</span> + package_name]),
+        (<span class="hljs-string">'share/'</span> + package_name, [<span class="hljs-string">'package.xml'</span>]),
+        (os.path.join(<span class="hljs-string">'share'</span>, package_name, <span class="hljs-string">'launch'</span>),glob(<span class="hljs-string">'launch/*.launch.py'</span>)) <span class="hljs-comment"># 将launch文件下的所有launch复制到install/功能包/share下</span>
+    ],
+    install_requires=[<span class="hljs-string">'setuptools'</span>],
+    zip_safe=<span class="hljs-keyword">True</span>,
+    maintainer=<span class="hljs-string">'orangepi'</span>,
+    maintainer_email=<span class="hljs-string">'<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f001d0e01080a1f062f1b000b00411b000b00">[email&#160;protected]</a>'</span>,
+    description=<span class="hljs-string">'TODO: Package description'</span>,
+    license=<span class="hljs-string">'TODO: License declaration'</span>,
+    tests_require=[<span class="hljs-string">'pytest'</span>],
+    entry_points={
+        <span class="hljs-string">'console_scripts'</span>: [
+            <span class="hljs-string">"li4_node=village_li.li4:main"</span>, <span class="hljs-comment"># 重点新添加 搭配 source install/setup.bash 使用 这样子系统才能找到village_li这个包</span>
+            <span class="hljs-string">"li3_node=village_li.li3:main"</span>
+        ],
+    },
+)
+
+</code></pre>
+<hr>
+<hr>
+<h2 class="code-line" data-line-start="370" data-line-end="371"><a id="ament_cmakelaunch_village_wang_370"></a>ament_cmake功能包的launch添加 举例：village_wang功能包</h2>
+<h3 class="code-line" data-line-start="372" data-line-end="373"><a id="1python_launchvillagelaucnhpy__c_372"></a>1、将上述python功能包下的 launch/village.laucnh.py 复制到 该c++节点下</h3>
+<h3 class="code-line" data-line-start="373" data-line-end="374"><a id="2CMakeListstxt_373"></a>2、在CMakeLists.txt下添加如下</h3>
+<pre><code class="has-line-data" data-line-start="375" data-line-end="380" class="language-cmake"><span class="hljs-comment"># 将launch文件添加到share下的功能包目录当中</span>
+<span class="hljs-keyword">install</span>(DIRECTORY launch
+  DESTINATION share/<span class="hljs-envvar">${PROJECT_NAME}</span>
+)
+</code></pre>
+<h1 class="code-line" data-line-start="381" data-line-end="382"><a id="launch_381"></a>！特殊玩法：在launch当中添加参数的设置，前提是该节点已经成功设置好参数</h1>
+<pre><code class="has-line-data" data-line-start="384" data-line-end="426" class="language-python"><span class="hljs-comment"># 导入库</span>
+<span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node
+
+<span class="hljs-comment"># 定义函数名称为：generate_launch_description</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate_launch_description</span><span class="hljs-params">()</span>:</span>
+
+
+    <span class="hljs-comment"># 创建Actions.Node对象li_node，标明李四所在位置</span>
+    li4_node = Node(
+        package=<span class="hljs-string">"village_li"</span>,
+        executable=<span class="hljs-string">"li4_node"</span>,
+        output=<span class="hljs-string">'screen'</span>,  <span class="hljs-comment">#四个可选项 </span>
+        parameters=[{<span class="hljs-string">'writer_timer_period'</span>: <span class="hljs-number">1</span>}]
+        )
+    <span class="hljs-comment"># 创建Actions.Node对象wang2_node，标明王二所在位置</span>
+    wang2_node = Node(
+        package=<span class="hljs-string">"village_wang"</span>,
+        executable=<span class="hljs-string">"wang2_node"</span>,
+        parameters=[{<span class="hljs-string">'novel_price'</span>: <span class="hljs-number">2</span>}]
+        )
+
+    <span class="hljs-comment"># 创建另外一个命名空间下的，创建Actions.Node对象li_node，标明李四所在位置</span>
+    li4_node2 = Node(
+        package=<span class="hljs-string">"village_li"</span>,
+        namespace=<span class="hljs-string">"mirror_town"</span>,
+        executable=<span class="hljs-string">"li4_node"</span>,
+        parameters=[{<span class="hljs-string">'writer_timer_period'</span>: <span class="hljs-number">2</span>}]
+    )
+    <span class="hljs-comment"># 创建另外一个命名空间下的，Actions.Node对象wang2_node，标明王二所在位置</span>
+    wang2_node2 = Node(
+        package=<span class="hljs-string">"village_wang"</span>,
+        namespace=<span class="hljs-string">"mirror_town"</span>,
+        executable=<span class="hljs-string">"wang2_node"</span>,
+        parameters=[{<span class="hljs-string">'novel_price'</span>: <span class="hljs-number">1</span>}]
+    )
+
+    <span class="hljs-comment"># 创建LaunchDescription对象launch_description,用于描述launch文件</span>
+    launch_description = LaunchDescription([li4_node,wang2_node,wang2_node2,li4_node2])
+    <span class="hljs-comment"># 返回让ROS2根据launch描述执行节点</span>
+    <span class="hljs-keyword">return</span> launch_description
+</code></pre>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body></html>
