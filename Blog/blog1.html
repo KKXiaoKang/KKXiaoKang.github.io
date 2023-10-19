@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Blog Title</title>
+    <!-- 引入jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 引入marked库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <!-- 通用头部模板-->>
     <title>KangKK's blog & Portfolio </title>
     <link href="../css/style.css" rel='stylesheet' type='text/css' />
@@ -11,10 +19,23 @@
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|Oswald:400,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,700,800' rel='stylesheet' type='text/css'>
     
-    <!-- //webfonts
-    <script src="js/jquery.min.js"></script> -->
-
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Add your styles here */
+    </style>
 </head>
+<body>
+
+<div id="blog-content"></div>
+
+<script>
+    // 使用jQuery的Ajax功能加载同级目录下的Markdown文件
+    $.get('./blog1.md', function(markdownText) {
+        const htmlContent = marked(markdownText);
+        $('#blog-content').html(htmlContent);
+    }).fail(function() {
+        alert('Error: Unable to fetch the Markdown file.');
+    });
+</script>
+
+</body>
+</html>
